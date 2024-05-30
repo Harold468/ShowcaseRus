@@ -74,10 +74,10 @@ app.post('/email',(async(req,res)=>{
     try{
 
 
-        await send_email(subject=`Your order from Showcase R us`,req?.body.email,req?.body.name,req?.body.phone,req?.body.product,req?.body.product_parts)
+        await send_email(subject=`Your order from Showcase R us`,req.body.email,req.body.name,req.body.phone,req.body.product,req.body.product_parts)
 
 
-        await send_email(subject=`Order was received from ${req?.body.email}`,owner_email,req?.body.name,req?.body.phone,req?.body.product,req?.body.product_parts)
+        await send_email(subject=`Order was received from ${req.body.email}`,owner_email,req.body.name,req.body.phone,req.body.product,req.body.product_parts)
      
     
     
