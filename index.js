@@ -17,6 +17,38 @@ const owner_email = process.env.owner_email
 
 const nodemailer = require('nodemailer');
 
+const send_email=async(subject=`Your order was received.`,to_email,name,phone,product,product_parts)=>{
+  const mailOptions = {
+    from: email_host,
+    to: to_email,
+    subject:subject,
+    html: `<Html>
+    <p>Email received.</p>
+    ${to_email===owner_email?``:`Our team will respond within the shortest possible time with updates in your order.<br/> `}
+    
+    <p>Name: ${name}</p>
+    <p>Email: ${to_email}</p>
+    <p>Phone: ${phone}</p>
+    <p>Product ordered: ${product}</p>
+    <p>Cutomization: ${JSON.stringify(product_parts)}</p>
+    <br/>
+    <p style="margin-right:"auto";>Regards</p>
+    <p style="margin-right:"auto";>ShowcaseRus Co. Ltd. </p>
+    </Html>`
+  };
+  
+  
+  
+
+await transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  }); 
+
+}
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -41,70 +73,12 @@ app.get('*',((req,res)=>{
 app.post('/email',(async(req,res)=>{
     try{
 
-        console.log(req?.body)
-        // name
-        // email
-        // phone
-        // product
-        // product_parts
-        const mailOptions = {
-            from: email_host,
-            to: req?.body.email,
-            subject:`Your order was received.`,
-            html: `<Html>
-            <p>Email received.</p>
-            Our team will respond within the shortest possible time with updates in your order.<br/> 
-            <p>Name: ${req?.body.name}</p>
-            <p>Email: ${req?.body.email}</p>
-            <p>Phone: ${req?.body.phone}</p>
-            <p>Product ordered: ${req?.body.product}</p>
-            <p>Cutomization: ${JSON.stringify(req?.body.product_parts)}</p>
-            <br/>
-            <p style="margin-right:"auto";>Regards</p>
-            <p style="margin-right:"auto";>ShowcaseRus Co. Ltd. </p>
-            </Html>`
-          };
-          
-          
-          
-    
-        await transporter.sendMail(mailOptions, function(error, info){
-            if (error) {
-              console.log(error);
-            } else {
-              console.log('Email sent: ' + info.response);
-            }
-          }); 
+
+        await send_email(subject=`Your order from Showcase R us`,req?.body.email,req?.body.name,req?.body.phone,req?.body.product,req?.body.product_parts)
 
 
-          const mailOptionsowner = {
-            from: email_host,
-            to: owner_email,
-            subject:`Order was received fro ${req?.body.email}`,
-            html: `<Html>
-            <p>Email Showcase Order.</p>
-            
-            <p>Name: ${req?.body.name}</p>
-            <p>Email: ${req?.body.email}</p>
-            <p>Phone: ${req?.body.phone}</p>
-            <p>Product ordered: ${req?.body.product}</p>
-            <p>Cutomization: ${JSON.stringify(req?.body.product_parts)}</p>
-            <br/>
-            <p style="margin-right:"auto";>Regards</p>
-            <p style="margin-right:"auto";>ShowcaseRus Co. Ltd. </p>
-            </Html>`
-          };
-          
-          
-          
-    
-        await transporter.sendMail(mailOptionsowner, function(error, info){
-            if (error) {
-              console.log(error);
-            } else {
-              console.log('Email sent: ' + info.response);
-            }
-          }); 
+        await send_email(subject=`Order was received from ${req?.body.email}`,owner_email,req?.body.name,req?.body.phone,req?.body.product,req?.body.product_parts)
+     
     
     
         res.status(201).json({"message":"email sent successfully"})
