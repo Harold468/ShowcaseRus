@@ -13,6 +13,7 @@ app.use(express.urlencoded({extended:false}))
 const PORT = process.env.PORT
 const email_password = process.env.email_password
 const email_host = process.env.email_host
+const owner_email = process.env.owner_email
 
 const nodemailer = require('nodemailer');
 
@@ -68,6 +69,36 @@ app.post('/email',(async(req,res)=>{
           
     
         await transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+              console.log(error);
+            } else {
+              console.log('Email sent: ' + info.response);
+            }
+          }); 
+
+
+          const mailOptionsowner = {
+            from: email_host,
+            to: owner_email,
+            subject:`Order was received fro ${req?.body.email}`,
+            html: `<Html>
+            <p>Email Showcase Order.</p>
+            
+            <p>Name: ${req?.body.name}</p>
+            <p>Email: ${req?.body.email}</p>
+            <p>Phone: ${req?.body.phone}</p>
+            <p>Product ordered: ${req?.body.product}</p>
+            <p>Cutomization: ${JSON.stringify(req?.body.product_parts)}</p>
+            <br/>
+            <p style="margin-right:"auto";>Regards</p>
+            <p style="margin-right:"auto";>ShowcaseRus Co. Ltd. </p>
+            </Html>`
+          };
+          
+          
+          
+    
+        await transporter.sendMail(mailOptionsowner, function(error, info){
             if (error) {
               console.log(error);
             } else {
