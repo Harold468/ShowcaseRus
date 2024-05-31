@@ -4,7 +4,12 @@ const dotenv = require("dotenv").config()
 const cors = require("cors")
 const path = require("path")
 // app.use(dotenv.config())
-app.use(cors())
+// const corsOptions = {
+//   origin: 'http://localhost:3000', // Only allow requests from this origin
+//   methods: 'GET,POST', // Only allow specific HTTP methods
+// };
+
+// app.use(cors(corsOptions));
 
 app.use(express.static(path.join(__dirname,'dist')))
 app.use(express.json())

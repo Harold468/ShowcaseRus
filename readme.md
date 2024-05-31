@@ -1,5 +1,5 @@
 # Showcase R us
-    -   https://showcaserus.glitch.me/
+    
 ## Showcase and order products in 3D via email using node js react js & react three fiber
 
 
